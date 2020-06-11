@@ -29,6 +29,12 @@ img{
 	width: 100%;
 }
 
+.borderCell{
+	background-image: url(../img/stonewall.jpg);
+	border-radius: 0;
+	background-size: cover;
+}
+
 
 .border{
 	width: 10%;
