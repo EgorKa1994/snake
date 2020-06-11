@@ -1,6 +1,6 @@
 ﻿import Game from './snake.js';
 
-const snake = new Game();
-snake.getGameField();
-snake.getBorder();
-snake.playingGame();
+const gameSnake = new Game();
+gameSnake.getGameField();
+gameSnake.getBorder();
+gameSnake.playingGame();

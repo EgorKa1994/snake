@@ -1,8 +1,9 @@
 ﻿export default class Game {
   constructor() {
     this.field = document.querySelector('.gameField');
-    this.snakeData = [35, 36, 37]; // начальное положение змеи, голова змеи - конец массива!!!!!!!!!!!
-    this.moveDirection = 1;
+    this.snakeData = [35, 36, 37]; // начальное положение змеи, голова змеи - конец массива!!!!!!!!!!
+    this.moveDirection = 'right';
+    this.moveDeltaId = 1;
     this.foodId;
     this.foodOnGameArea = false;
     this.borderData = [];
@@ -19,29 +20,39 @@
   _hundleClickOnPress(e) {
     if (
       event.code == 'ArrowDown' &&
-      this.moveDirection !== 17 &&
-      this.moveDirection !== -17
+      this.moveDirection !== 'top' &&
+      this.moveDirection !== 'bottom'
     ) {
-      this.moveDirection = 17;
+      this.moveDirection = 'bottom';
     } else if (
       event.code == 'ArrowRight' &&
-      this.moveDirection !== 1 &&
-      this.moveDirection !== -1
+      this.moveDirection !== 'right' &&
+      this.moveDirection !== 'left'
     ) {
-      this.moveDirection = 1;
+      this.moveDirection = 'right';
     } else if (
       event.code == 'ArrowUp' &&
-      this.moveDirection !== 17 &&
-      this.moveDirection !== -17
+      this.moveDirection !== 'top' &&
+      this.moveDirection !== 'bottom'
     ) {
-      this.moveDirection = -17;
+      this.moveDirection = 'top';
     } else if (
       event.code == 'ArrowLeft' &&
-      this.moveDirection !== 1 &&
-      this.moveDirection !== -1
+      this.moveDirection !== 'right' &&
+      this.moveDirection !== 'left'
     ) {
-      this.moveDirection = -1;
+      this.moveDirection = 'left';
     }
+
+    this._getMoveDeltaId();
+  }
+
+  _getMoveDeltaId() {
+    if (this.moveDirection == 'right') this.moveDeltaId = 1;
+    else if (this.moveDirection == 'left') this.moveDeltaId = -1;
+    else if (this.moveDirection == 'top') this.moveDeltaId = -17;
+    else if (this.moveDirection == 'bottom') this.moveDeltaId = 17;
+    return this.moveDeltaId;
   }
 
   // Создание разметки игры***************************
@@ -79,6 +90,8 @@
 
   _getMovingSnake(currentSnakeData, directionOfMoving) {
     let currentHeadId = currentSnakeData[currentSnakeData.length - 1];
+    // let samplePrimarySnakeData = currentSnakeData.slice();
+    let tailId = currentSnakeData[0];
 
     // Редактирование при движении начала массива (хвост змеи) в зависимости от поедания пищи
     if (currentHeadId !== +this.foodId) {
@@ -107,6 +120,9 @@
         this._hundleClickOnPress.bind(this)
       );
       this.gameOver = true;
+
+      currentSnakeData.splice(currentSnakeData.length - 1, 1);
+      currentSnakeData.splice(0, 0, tailId);
     }
     return currentSnakeData;
   }
@@ -128,8 +144,9 @@
       this._createIdOfFood();
       this._markUpFood();
     }
+
     this._removeMarkUpOfSnake(currentSnakeData);
-    this._getMovingSnake(currentSnakeData, this.moveDirection);
+    this._getMovingSnake(currentSnakeData, this.moveDeltaId);
     this._addMarkUpOfSnake(currentSnakeData);
   };
 
