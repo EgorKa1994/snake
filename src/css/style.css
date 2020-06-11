@@ -1,0 +1,70 @@
+body{
+	background-image: url(../img/grass.jpg);
+	font-family: 'Holtwood One SC', serif;
+}
+
+.container{
+	max-width: 1200px;
+	margin: 20px auto;
+	position: relative;
+}
+
+.gameField{
+	width: 680px;
+	height: 400px;
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 auto;
+
+}
+
+.gameCell{
+	width: 40px;
+	height: 40px;
+	/* border: 2px solid black; */
+	border-radius: 25%;
+}
+
+img{
+	width: 100%;
+}
+
+
+.border{
+	width: 10%;
+	height: 10%;
+}
+
+
+.header{
+height: 80px;
+width: 680px;
+margin: 0 auto 10px;
+display: flex;
+justify-content: center;
+}
+
+.header__logo{
+width: 30%;
+}
+
+.header__logo img{
+width: 100px;
+height: 80px;
+margin-left: 20px;
+}
+
+h1{
+width: 70%;
+font-size: 4em;
+color: #bf0707;
+background: linear-gradient(160deg, rgba(191,7,7,1) 32%, rgba(213,126,81,1) 62%, rgba(213,126,81,1) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+font-weight: 900;
+text-transform: uppercase;
+}
+
+
+
+
