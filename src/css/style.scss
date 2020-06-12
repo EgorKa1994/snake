@@ -1,67 +1,128 @@
 @import 'reset';
 
-body{
-	background-image: url(../img/grass.jpg);
-	font-family: 'Holtwood One SC', serif;
+$primary-color: #bf0707;
+$secondary-color: rgba(233, 213, 88, 1);
+$third-color:  #db8457;
+$fourth-color: rgba(233, 226, 172, 1);
+
+$transition-main: all 0.3s ease-in;
+
+body {
+  background-image: url(../img/grass.jpg);
+  font-family: 'Holtwood One SC', serif;
 }
 
-.container{
-	max-width: 1200px;
-	margin: 20px auto;
-	position: relative;
+.container {
+  max-width: 680px;
+  margin: 20px auto;
+  position: relative;
 }
 
-.gameField{
-	width: 680px;
+.gameField {
+  width: 680px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gameCell {
+  width: 40px;
+  height: 40px;
+  border-radius: 25%;
+}
+
+img {
+  width: 100%;
+}
+
+.borderCell {
+  background-image: url(../img/stonewall.jpg);
+  border-radius: 0;
+  background-size: cover;
+}
+
+.header {
+  margin: 0 auto 10px;
+  height: 80px;
+  justify-content: center;
+  display: flex;
+}
+
+.header__logo {
+  width: 30%;
+  img {
+    height: 80px;
+    width: 100px;
+    margin-left: 20px;
+  }
+}
+
+h1 {
+  width: 70%;
+  font-size: 4em;
+  color: $primary-color;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px $fourth-color;
+}
+
+.invisible {
+  display: none;
+}
+
+%commonForBtn {
+	cursor: pointer;
+	text-align: center;
+	border-radius: 29px;
+	transition: $transition-main;
+	margin: 10px auto;
+}
+
+.gameMessage {
+  width: 680px;
 	height: 400px;
-	display: flex;
-	flex-wrap: wrap;
-	margin: 0 auto;
+	font-weight: bold;
+  h2 {
+    font-size: 2em;
+    text-align: center;
+    padding: 40px 0 20px;
+    color: $third-color;
+    text-shadow: 3px 3px 0px $secondary-color;
+  }
+  .difficulty {
+    display: flex;
+    justify-content: center;
+    margin: 0 -10px;
+    padding-bottom: 20px;
+    div {
+			@extend %commonForBtn;
+      font-size: 1em;
+      padding: 5px 0;
+      width: 18%;
+      color: $primary-color;
+      background-color: $secondary-color;
+      border: 2px solid $primary-color;
+      &:hover {
+				background-color: $primary-color;
+				color: $secondary-color;
+        transition: $transition-main;
+      }
+    }
+	}
+	.startGame{
+		@extend %commonForBtn;
+		font-size: 2em;
+		padding: 10px 0;
+		width: 40%;
+		color: $third-color;
+		background-color: $fourth-color;
+		border: 2px solid $fourth-color;
+		box-shadow: 5px 5px 5px 0px $third-color;
+		&:hover {
+			color: $primary-color;
+			transition: $transition-main;
+			box-shadow: 5px 5px 5px 0px $primary-color;
+		}
 
+	}
 }
-
-.gameCell{
-	width: 40px;
-	height: 40px;
-	border-radius: 25%;
-}
-
-img{
-	width: 100%;
-}
-
-.borderCell{
-	background-image: url(../img/stonewall.jpg);
-	border-radius: 0;
-	background-size: cover;
-}
-
-.header{
-height: 80px;
-width: 680px;
-margin: 0 auto 10px;
-display: flex;
-justify-content: center;
-}
-
-.header__logo{
-width: 30%;
-}
-
-.header__logo img{
-width: 100px;
-height: 80px;
-margin-left: 20px;
-}
-
-h1{
-width: 70%;
-font-size: 4em;
-color: #bf0707;
-font-weight: 900;
-text-transform: uppercase;
-}
-
-
-
-
