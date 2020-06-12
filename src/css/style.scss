@@ -1,3 +1,5 @@
+@import 'reset';
+
 body{
 	background-image: url(../img/grass.jpg);
 	font-family: 'Holtwood One SC', serif;
@@ -56,9 +58,6 @@ h1{
 width: 70%;
 font-size: 4em;
 color: #bf0707;
-background: linear-gradient(160deg, rgba(191,7,7,1) 32%, rgba(213,126,81,1) 62%, rgba(213,126,81,1) 100%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
 font-weight: 900;
 text-transform: uppercase;
 }
