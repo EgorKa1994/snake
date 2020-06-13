@@ -89,26 +89,6 @@ h1 {
     color: $third-color;
     text-shadow: 3px 3px 0px $secondary-color;
   }
-  .difficulty {
-    display: flex;
-    justify-content: center;
-    margin: 0 -10px;
-    padding-bottom: 20px;
-    div {
-			@extend %commonForBtn;
-      font-size: 1em;
-      padding: 5px 0;
-      width: 18%;
-      color: $primary-color;
-      background-color: $secondary-color;
-      border: 2px solid $primary-color;
-      &:hover {
-				background-color: $primary-color;
-				color: $secondary-color;
-        transition: $transition-main;
-      }
-    }
-	}
 	.startGame{
 		@extend %commonForBtn;
 		font-size: 2em;
@@ -123,6 +103,31 @@ h1 {
 			transition: $transition-main;
 			box-shadow: 5px 5px 5px 0px $primary-color;
 		}
+  }
+  .choosenLevelButton{
+    background-color: $primary-color;
+    color: $secondary-color;
+    border-color: $secondary-color;
+  }
+}
 
-	}
+.difficulty {
+  display: flex;
+  justify-content: center;
+  margin: 0 -10px;
+  padding-bottom: 20px;
+  div {
+    @extend %commonForBtn;
+    font-size: 1em;
+    padding: 5px 0;
+    width: 18%;
+    color: $primary-color;
+    background-color: $secondary-color;
+    border: 2px solid $primary-color;
+    &:hover {
+      background-color: $primary-color;
+      color: $secondary-color;
+      transition: $transition-main;
+    }
+  }
 }

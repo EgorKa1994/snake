@@ -3,4 +3,4 @@
 const gameSnake = new Game();
 gameSnake.getGameField();
 gameSnake.getBorder();
-// gameSnake.playingGame();
+gameSnake.playingGame();

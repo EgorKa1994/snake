@@ -9,12 +9,23 @@
     this.borderData = [];
     this.gameOver = false;
     this.updating;
+    this.difficulty = document.querySelector('.difficulty');
+    this.difficultyLevel = this.difficulty.querySelectorAll('div');
+    this.selectedDifficultyLevel;
+    this.speed;
 
     this._init();
   }
 
   _init() {
+    // Клик на стрелки
     document.addEventListener('keydown', this._hundleClickOnPress.bind(this));
+
+    // Клик на выборе уровня сложности
+    this.difficulty.addEventListener(
+      'click',
+      this._handleDifficultyLevel.bind(this)
+    );
   }
 
   _hundleClickOnPress(e) {
@@ -44,15 +55,28 @@
       this.moveDirection = 'left';
     }
 
-    this._getMoveDeltaId();
+    this._getDeltaIdForMoving();
   }
 
-  _getMoveDeltaId() {
+  _getDeltaIdForMoving() {
     if (this.moveDirection == 'right') this.moveDeltaId = 1;
     else if (this.moveDirection == 'left') this.moveDeltaId = -1;
     else if (this.moveDirection == 'top') this.moveDeltaId = -17;
     else if (this.moveDirection == 'bottom') this.moveDeltaId = 17;
     return this.moveDeltaId;
+  }
+
+  _handleDifficultyLevel(e) {
+    let level = e.target.getAttribute('id');
+    if (level == 'veryEasy') this.speed = 500;
+    else if (level == 'easy') this.speed = 400;
+    else if (level == 'medium') this.speed = 200;
+    else if (level == 'hard') this.speed = 100;
+    else if (level == 'veryHard') this.speed = 50;
+    else if (!level) return;
+    let choosenLevel = document.querySelector(`#${level}`);
+    choosenLevel.classList.add('choosenLevelButton');
+    console.log(this.speed);
   }
 
   // Создание разметки игры***************************
@@ -82,9 +106,6 @@
     for (let i = 0; i < this.borderData.length; i++) {
       let borderCell = document.getElementById(this.borderData[i]);
       borderCell.classList.add('borderCell');
-      // borderCell.style.backgroundImage = 'url(../img/stonewall.jpg)';
-      // borderCell.style.borderRadius = '0';
-      // borderCell.style.backgroundSize = 'cover';
     }
   }
 
@@ -173,6 +194,7 @@
   }
 
   playingGame() {
-    this.updating = setInterval(this._movingMarkUp, 300, this.snakeData);
+    console.log(this.speed);
+    // this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
   }
 }
