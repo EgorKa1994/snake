@@ -75,7 +75,7 @@ h1 {
 	text-align: center;
 	border-radius: 29px;
 	transition: $transition-main;
-	margin: 10px auto;
+	margin: 5px auto;
 }
 
 .gameMessage {
@@ -97,7 +97,7 @@ h1 {
 		color: $third-color;
 		background-color: $fourth-color;
 		border: 2px solid $fourth-color;
-		box-shadow: 5px 5px 5px 0px $third-color;
+    box-shadow: 5px 5px 5px 0px $third-color;
 		&:hover {
 			color: $primary-color;
 			transition: $transition-main;

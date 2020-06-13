@@ -13,6 +13,8 @@
     this.difficultyLevel = this.difficulty.querySelectorAll('div');
     this.selectedDifficultyLevel;
     this.speed;
+    this.playGameButton = document.querySelector('.startGame');
+    this.gameMessage = document.querySelector('.gameMessage');
 
     this._init();
   }
@@ -25,6 +27,12 @@
     this.difficulty.addEventListener(
       'click',
       this._handleDifficultyLevel.bind(this)
+    );
+
+    // Клик на старт игры
+    this.playGameButton.addEventListener(
+      'click',
+      this._handleClickOnStartGame.bind(this)
     );
   }
 
@@ -67,6 +75,9 @@
   }
 
   _handleDifficultyLevel(e) {
+    this.difficultyLevel.forEach((item) => {
+      item.classList.remove('choosenLevelButton');
+    });
     let level = e.target.getAttribute('id');
     if (level == 'veryEasy') this.speed = 500;
     else if (level == 'easy') this.speed = 400;
@@ -76,7 +87,13 @@
     else if (!level) return;
     let choosenLevel = document.querySelector(`#${level}`);
     choosenLevel.classList.add('choosenLevelButton');
-    console.log(this.speed);
+    this.playGameButton.classList.remove('invisible');
+  }
+
+  _handleClickOnStartGame() {
+    this.gameMessage.classList.toggle('invisible');
+    this.field.classList.toggle('invisible');
+    this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
   }
 
   // Создание разметки игры***************************
@@ -194,7 +211,6 @@
   }
 
   playingGame() {
-    console.log(this.speed);
     // this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
   }
 }
