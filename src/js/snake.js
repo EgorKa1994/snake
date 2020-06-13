@@ -1,6 +1,7 @@
 ﻿export default class Game {
   constructor() {
     this.field = document.querySelector('.gameField');
+    this.container = document.querySelector('.container');
     this.snakeData = [35, 36, 37]; // начальное положение змеи, голова змеи - конец массива!!!!!!!!!!
     this.moveDirection = 'right';
     this.moveDeltaId = 1;
@@ -18,8 +19,14 @@
     this.curResult = document.querySelector('.currentResult');
     this.points = 0;
     this.bestResult = document.querySelector('#bestValue');
+    this.bestResultBlock = document.querySelector('.currentInfo');
     this.currentResultValue = document.querySelector('#currentValue');
     this.theMostPoints = localStorage.getItem('theBest') || 0;
+    this.addPoints;
+    this.sampleOfBestResult;
+    this.buttonForRestart = document.querySelector('#restart');
+    this.finalResultMessage = document.querySelector('.gameOverResult');
+    this.finalText = document.querySelector('p');
 
     this._init();
   }
@@ -38,6 +45,11 @@
     this.playGameButton.addEventListener(
       'click',
       this._handleClickOnStartGame.bind(this)
+    );
+
+    this.buttonForRestart.addEventListener(
+      'click',
+      this._hundleClickOnRestart.bind(this)
     );
   }
 
@@ -84,24 +96,40 @@
       item.classList.remove('choosenLevelButton');
     });
     let level = e.target.getAttribute('id');
-    if (level == 'veryEasy') this.speed = 500;
-    else if (level == 'easy') this.speed = 400;
-    else if (level == 'medium') this.speed = 200;
-    else if (level == 'hard') this.speed = 100;
-    else if (level == 'veryHard') this.speed = 50;
-    else if (!level) return;
+    if (level == 'veryEasy') {
+      this.speed = 500;
+      this.addPoints = 1;
+    } else if (level == 'easy') {
+      this.speed = 400;
+      this.addPoints = 2;
+    } else if (level == 'medium') {
+      this.speed = 200;
+      this.addPoints = 3;
+    } else if (level == 'hard') {
+      this.speed = 100;
+      this.addPoints = 4;
+    } else if (level == 'veryHard') {
+      this.speed = 50;
+      this.addPoints = 5;
+    } else if (!level) return;
     let choosenLevel = document.querySelector(`#${level}`);
     choosenLevel.classList.add('choosenLevelButton');
     this.playGameButton.classList.remove('invisible');
   }
 
   _handleClickOnStartGame() {
-    this.gameMessage.classList.toggle('invisible');
-    this.field.classList.toggle('invisible');
+    this.gameMessage.classList.add('invisible');
+    this.field.classList.add('invisible');
     this.curResult.classList.remove('invisible');
     this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
     this.bestResult.innerHTML = localStorage.getItem('theBest') || '0';
     this.currentResultValue.innerHTML = '0';
+  }
+
+  _hundleClickOnRestart() {
+    this.buttonForRestart.remove();
+    this.finalResultMessage.remove();
+    this.gameMessage.classList.remove('invisible');
   }
 
   // Создание разметки игры***************************
@@ -144,7 +172,8 @@
       currentSnakeData.splice(0, 1);
     } else {
       this.foodOnGameArea = false;
-      this.currentResultValue.innerHTML = `${++this.points}`;
+      this.points = this.points + this.addPoints;
+      this.currentResultValue.innerHTML = `${this.points}`;
     }
 
     if (this.points > this.theMostPoints) {
@@ -173,6 +202,7 @@
       this.gameOver = true;
 
       this._setBestResult(this.points);
+      this._getResultMessage();
 
       currentSnakeData.splice(currentSnakeData.length - 1, 1);
       currentSnakeData.splice(0, 0, tailId);
@@ -183,12 +213,15 @@
   _removeMarkUpOfSnake(currentSnakeData) {
     currentSnakeData.forEach((item) => {
       document.getElementById(item).style.background = 'transparent';
+      document.getElementById(item).style.boxShadow = 'none';
     });
   }
 
   _addMarkUpOfSnake(currentSnakeData) {
     currentSnakeData.forEach((item) => {
       document.getElementById(item).style.background = '#b90707';
+      document.getElementById(item).style.boxShadow =
+        '5px 5px 5px 0px rgba(0,0,0,0.75)';
     });
   }
 
@@ -210,7 +243,8 @@
 
   _markUpFood() {
     this.foodOnGameArea = document.getElementById(this.foodId);
-    this.foodOnGameArea.style.backgroundColor = '#4e524e';
+    this.foodOnGameArea.style.backgroundColor = 'rgba(233, 213, 88, 1)';
+    this.foodOnGameArea.style.boxShadow = '5px 5px 5px 0px rgba(0,0,0,0.75)';
   }
 
   _createIdOfFood() {
@@ -235,5 +269,21 @@
 
   playingGame() {
     this.bestResult.innerHTML = this.theMostPoints;
+    this.sampleOfBestResult = this.theMostPoints;
+  }
+
+  _getResultMessage() {
+    this.field.classList.add('invisible');
+    this.bestResultBlock.classList.add('invisible');
+    this.finalResultMessage.classList.remove('invisible');
+    if (this.sampleOfBestResult > this.points) {
+      this.finalText.textContent = `Game over. Your result is ${this.points}. Try one more time to get best result!`;
+    } else {
+      this.finalText.textContent = `Game over. Congratulations! It's new record! Your result is ${this.points}.`;
+    }
+    this.buttonForRestart.classList.add('startGame');
+    this.buttonForRestart.style.width = '30%';
+    this.buttonForRestart.style.fontSize = '1em';
+    this.buttonForRestart.style.marginTop = '20px';
   }
 }
