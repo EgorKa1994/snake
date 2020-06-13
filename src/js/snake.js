@@ -15,6 +15,11 @@
     this.speed;
     this.playGameButton = document.querySelector('.startGame');
     this.gameMessage = document.querySelector('.gameMessage');
+    this.curResult = document.querySelector('.currentResult');
+    this.points = 0;
+    this.bestResult = document.querySelector('#bestValue');
+    this.currentResultValue = document.querySelector('#currentValue');
+    this.theMostPoints = localStorage.getItem('theBest') || 0;
 
     this._init();
   }
@@ -93,7 +98,10 @@
   _handleClickOnStartGame() {
     this.gameMessage.classList.toggle('invisible');
     this.field.classList.toggle('invisible');
+    this.curResult.classList.remove('invisible');
     this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
+    this.bestResult.innerHTML = localStorage.getItem('theBest') || '0';
+    this.currentResultValue.innerHTML = '0';
   }
 
   // Создание разметки игры***************************
@@ -136,6 +144,11 @@
       currentSnakeData.splice(0, 1);
     } else {
       this.foodOnGameArea = false;
+      this.currentResultValue.innerHTML = `${++this.points}`;
+    }
+
+    if (this.points > this.theMostPoints) {
+      this.bestResult.innerHTML = this.points;
     }
 
     // Редактирование при движении конца массива (голова змеи)
@@ -158,6 +171,8 @@
         this._hundleClickOnPress.bind(this)
       );
       this.gameOver = true;
+
+      this._setBestResult(this.points);
 
       currentSnakeData.splice(currentSnakeData.length - 1, 1);
       currentSnakeData.splice(0, 0, tailId);
@@ -210,7 +225,15 @@
     }
   }
 
+  _setBestResult(curResult) {
+    if (this.theMostPoints < curResult) {
+      this.theMostPoints = localStorage.setItem('theBest', curResult);
+    } else {
+      this.bestResult.innerHTML = this.theMostPoints;
+    }
+  }
+
   playingGame() {
-    // this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
+    this.bestResult.innerHTML = this.theMostPoints;
   }
 }

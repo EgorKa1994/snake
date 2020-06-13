@@ -7,6 +7,38 @@ $fourth-color: rgba(233, 226, 172, 1);
 
 $transition-main: all 0.3s ease-in;
 
+%commonForBtn {
+	cursor: pointer;
+	text-align: center;
+	border-radius: 29px;
+	transition: $transition-main;
+	margin: 5px auto;
+}
+
+%flex-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%mainFont-style {
+  color: $primary-color;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px $fourth-color;
+}
+
+%secondaryFont-style {
+  color: $third-color;
+  text-shadow: 3px 3px 0px $secondary-color;
+}
+
+%font-styleForPoints{
+  font-size: 1.5em;
+  @extend %secondaryFont-style;
+  padding-left: 10px;
+}
+
 body {
   background-image: url(../img/grass.jpg);
   font-family: 'Holtwood One SC', serif;
@@ -41,11 +73,10 @@ img {
   background-size: cover;
 }
 
-.header {
-  margin: 0 auto 10px;
+.header, .currentInfo {
+  margin-bottom: 10px;
   height: 80px;
-  justify-content: center;
-  display: flex;
+  @extend %flex-style;
 }
 
 .header__logo {
@@ -70,27 +101,37 @@ h1 {
   display: none;
 }
 
-%commonForBtn {
-	cursor: pointer;
-	text-align: center;
-	border-radius: 29px;
-	transition: $transition-main;
-	margin: 5px auto;
+.currentInfo{
+  @extend %mainFont-style;
+  font-size: 1.3em;
+  .currentResult{
+    width: 55%;
+    text-align: center;
+    #currentValue{
+      @extend %font-styleForPoints;
+    }
+  }
+  .bestResult{
+    text-align: center;
+    width: 45%;
+    #bestValue{
+      @extend %font-styleForPoints;
+    }
+  }
 }
 
 .gameMessage {
   width: 680px;
-	height: 400px;
+	height: 250px;
 	font-weight: bold;
   h2 {
+    @extend %secondaryFont-style;
     font-size: 2em;
     text-align: center;
     padding: 40px 0 20px;
-    color: $third-color;
-    text-shadow: 3px 3px 0px $secondary-color;
   }
 	.startGame{
-		@extend %commonForBtn;
+    @extend %commonForBtn;
 		font-size: 2em;
 		padding: 10px 0;
 		width: 40%;
@@ -102,7 +143,7 @@ h1 {
 			color: $primary-color;
 			transition: $transition-main;
 			box-shadow: 5px 5px 5px 0px $primary-color;
-		}
+    }
   }
   .choosenLevelButton{
     background-color: $primary-color;
@@ -112,8 +153,7 @@ h1 {
 }
 
 .difficulty {
-  display: flex;
-  justify-content: center;
+  @extend %flex-style;
   margin: 0 -10px;
   padding-bottom: 20px;
   div {
