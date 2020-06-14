@@ -5,6 +5,7 @@
 body {
   background-image: url(../img/grass.jpg);
   font-family: 'Holtwood One SC', serif;
+  text-align: center;
   .container {
     max-width: 680px;
     margin: 20px auto;
@@ -32,24 +33,51 @@ body {
   }
 }
 
+// Анимация
+@keyframes logoAppearing {
+  0% {
+    top: -150%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+@keyframes nameAppearing {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .header {
   @extend %styleForHeaderAndFooter;
   @extend %flex-style;
+  position: relative;
   .logo {
-    width: 30%;
+    position: absolute;
+    top: -150%;
+    left: 20px;
+    animation: logoAppearing 0.5s ease-in-out 3.5s forwards;
     img {
       height: 80px;
       width: 100px;
-      margin-left: 20px;
     }
   }
   h1 {
+    opacity: 0;
     width: 70%;
     font-size: 4em;
     color: $primary-color;
     font-weight: 900;
     text-transform: uppercase;
     text-shadow: 3px 3px 0px $fourth-color;
+    animation: nameAppearing 3s ease 1s forwards;
   }
 }
 
@@ -63,7 +91,6 @@ body {
   @extend %flex-style;
   font-size: 1.3em;
   width: 100%;
-  text-align: center;
   .currentResult{
     width: 45%;
     #currentValue{
@@ -85,7 +112,6 @@ body {
   h2 {
     @extend %secondaryFont-style;
     font-size: 2em;
-    text-align: center;
     padding: 40px 0 20px;
   }
 	.startGame{
@@ -127,7 +153,6 @@ body {
   font-weight: bold;
   color: $secondary-color;
   font-size: 1.7em;
-  text-align: center;
   text-shadow: 3px 3px 0px $primary-color;
 }
 
