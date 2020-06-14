@@ -3,11 +3,11 @@
     this.field = document.querySelector('.gameField'); // Игровое поле
 
     this.difficulty = document.querySelector('.difficulty'); // Поле для выбора уровня сложности
-    this.difficultyLevel = this.difficulty.querySelectorAll('div');
+    this.difficultyLevel = this.difficulty.querySelectorAll('div'); // Массив уровней сложности
     this.playGameButton = document.querySelector('.startGame'); // Кнопка запуска игры
     this.gameSettings = document.querySelector('.gameMessage'); // Поле настройки игры
 
-    this.infoBlock = document.querySelector('.currentInfo'); // Поле с информацией о текущих и лучших результатах
+    this.infoBlock = document.querySelector('.currentInfo'); // Поле с информацией о текущем и лучшем результатах
     this.curResultBlock = document.querySelector('.currentResult'); // Поле текущий результат
     this.currentResultValue = document.querySelector('#currentValue'); // Поле для вывода значения текущего результата
     this.bestResultValue = document.querySelector('#bestValue'); // Поле для вывода значения лучшего результата
@@ -25,7 +25,7 @@
     this.foodId;
     this.foodOnGameArea = false;
     this.gameOver = false;
-    this.updating;
+    this.updating; // Обновление данных змеи
     this.speed; // Скорость передвижения змеи
     this.points; // Очки в игре
     this.addPointsValue; // В зависимости от уровня сложности начисляются разное кол-во очков
@@ -108,7 +108,6 @@
       item.classList.remove('choosenLevelButton');
     });
 
-    // Выбор уровня сложности
     let level = e.target.getAttribute('id');
     if (level == 'veryEasy') {
       this.speed = 500;
@@ -207,19 +206,27 @@
       this.borderData.includes(newHeadId) ||
       sampleForChecking.includes(newHeadId)
     ) {
-      clearInterval(this.updating);
-      currentSnakeData.splice(currentSnakeData.length - 1, 1);
-      currentSnakeData.splice(0, 0, tailId);
-
       this.gameOver = true;
 
-      this._setBestResult(this.points);
-      this._getResultMessage();
+      clearInterval(this.updating);
+
+      this._checkBestResult(this.points);
+      this._showResultMessage();
       return;
     }
     return currentSnakeData;
   }
 
+  // Подсчет очков
+  _pointsCounting(currentPoints) {
+    this.points = currentPoints + this.addPointsValue;
+    this.currentResultValue.innerHTML = `${this.points}`;
+    if (this.points > this.pointsBestResult) {
+      this.bestResultValue.innerHTML = this.points;
+    }
+  }
+
+  // Удаление разметки змеи
   _removeMarkUpOfSnake(currentSnakeData) {
     currentSnakeData.forEach((item) => {
       document.getElementById(item).style.background = 'transparent';
@@ -227,6 +234,7 @@
     });
   }
 
+  // Добавление разметки змеи
   _addMarkUpOfSnake(currentSnakeData) {
     currentSnakeData.forEach((item) => {
       document.getElementById(item).style.background = '#b90707';
@@ -235,11 +243,11 @@
     });
   }
 
+  // Разметка при движении
   _movingMarkUp = (currentSnakeData) => {
     if (this.foodOnGameArea == false) {
       this._createIdOfFood();
       this._markUpFood();
-      // this._pointsCounting(this.points);
     }
 
     this._removeMarkUpOfSnake(currentSnakeData);
@@ -253,17 +261,14 @@
     }
   };
 
-  _getRandomInteger(min, max) {
-    let rand = min - 0.5 + Math.random() * (max - min + 1);
-    return Math.round(rand);
-  }
-
+  // Разметка еды
   _markUpFood() {
     this.foodOnGameArea = document.getElementById(this.foodId);
     this.foodOnGameArea.style.backgroundColor = 'rgba(233, 213, 88, 1)';
     this.foodOnGameArea.style.boxShadow = '5px 5px 5px 0px rgba(0,0,0,0.75)';
   }
 
+  // Создание еды
   _createIdOfFood() {
     this.foodId = `${this._getRandomInteger(18, 151)}`;
     if (
@@ -276,7 +281,12 @@
     }
   }
 
-  _setBestResult(currentResult) {
+  _getRandomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+  }
+
+  _checkBestResult(currentResult) {
     if (this.pointsBestResult < currentResult) {
       localStorage.setItem('theBest', currentResult);
       this.pointsBestResult = currentResult;
@@ -289,6 +299,7 @@
     this.bestResultValue.innerHTML = this.pointsBestResult;
   }
 
+  // Сброс настроек перед началом игры
   _startGame() {
     this.snakeData = [35, 36, 37];
     this.moveDirection = 'right';
@@ -301,7 +312,7 @@
     this.sampleOfBestResult = this.pointsBestResult;
   }
 
-  _getResultMessage() {
+  _showResultMessage() {
     this._setMarkUpOfTheGame(this.threeGameStages[2]); // Разметка
 
     if (this.sampleOfBestResult >= this.points) {
@@ -326,15 +337,6 @@
       this.field.classList.add('invisible');
       this.infoBlock.classList.add('invisible');
       this.finalResultMessage.classList.remove('invisible');
-    }
-  }
-
-  // Подсчет очков
-  _pointsCounting(currentPoints) {
-    this.points = currentPoints + this.addPointsValue;
-    this.currentResultValue.innerHTML = `${this.points}`;
-    if (this.points > this.pointsBestResult) {
-      this.bestResultValue.innerHTML = this.points;
     }
   }
 }

@@ -4,7 +4,10 @@
 
 body {
   background-image: url(../img/grass.jpg);
-  font-family: 'Holtwood One SC', serif;
+  font-family: 'holtwood_one_scregular', serif;
+  text-rendering: optimizeLegibility;
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
   text-align: center;
   .container {
     max-width: 680px;
@@ -63,7 +66,7 @@ body {
     position: absolute;
     top: -150%;
     left: 20px;
-    animation: logoAppearing 0.5s ease-in-out 3.5s forwards;
+    animation: logoAppearing 0.3s ease-in-out 1.5s forwards;
     img {
       height: 80px;
       width: 100px;
@@ -77,7 +80,7 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     text-shadow: 3px 3px 0px $fourth-color;
-    animation: nameAppearing 3s ease 1s forwards;
+    animation: nameAppearing 1.5s ease 0.5s forwards;
   }
 }
 
