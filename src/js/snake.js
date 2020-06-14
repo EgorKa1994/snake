@@ -1,32 +1,38 @@
 ﻿export default class Game {
   constructor() {
-    this.field = document.querySelector('.gameField');
-    this.container = document.querySelector('.container');
-    this.snakeData = [35, 36, 37]; // начальное положение змеи, голова змеи - конец массива!!!!!!!!!!
-    this.moveDirection = 'right';
-    this.moveDeltaId = 1;
+    this.field = document.querySelector('.gameField'); // Игровое поле
+
+    this.difficulty = document.querySelector('.difficulty'); // Поле для выбора уровня сложности
+    this.difficultyLevel = this.difficulty.querySelectorAll('div');
+    this.playGameButton = document.querySelector('.startGame'); // Кнопка запуска игры
+    this.gameSettings = document.querySelector('.gameMessage'); // Поле настройки игры
+
+    this.infoBlock = document.querySelector('.currentInfo'); // Поле с информацией о текущих и лучших результатах
+    this.curResultBlock = document.querySelector('.currentResult'); // Поле текущий результат
+    this.currentResultValue = document.querySelector('#currentValue'); // Поле для вывода значения текущего результата
+    this.bestResultValue = document.querySelector('#bestValue'); // Поле для вывода значения лучшего результата
+
+    this.gameOverButton = document.querySelector('#restart'); // Кнопка для перезапуска игры
+    this.finalResultMessage = document.querySelector('.gameOverResult'); // Поле с результатом игры
+    this.finalText = document.querySelector('p'); // Сообщение
+
+    this.snakeData = []; // Данные змеи
+    this.borderData = []; // Данный границы игрового поля
+
+    this.moveDirection = 'right'; // Направление движения змеи
+    this.moveDeltaId = 1; // Математическое выражение движения змеи
+
     this.foodId;
     this.foodOnGameArea = false;
-    this.borderData = [];
     this.gameOver = false;
     this.updating;
-    this.difficulty = document.querySelector('.difficulty');
-    this.difficultyLevel = this.difficulty.querySelectorAll('div');
-    this.selectedDifficultyLevel;
-    this.speed;
-    this.playGameButton = document.querySelector('.startGame');
-    this.gameMessage = document.querySelector('.gameMessage');
-    this.curResult = document.querySelector('.currentResult');
-    this.points = 0;
-    this.bestResult = document.querySelector('#bestValue');
-    this.bestResultBlock = document.querySelector('.currentInfo');
-    this.currentResultValue = document.querySelector('#currentValue');
-    this.theMostPoints = localStorage.getItem('theBest') || 0;
-    this.addPoints;
-    this.sampleOfBestResult;
-    this.buttonForRestart = document.querySelector('#restart');
-    this.finalResultMessage = document.querySelector('.gameOverResult');
-    this.finalText = document.querySelector('p');
+    this.speed; // Скорость передвижения змеи
+    this.points; // Очки в игре
+    this.addPointsValue; // В зависимости от уровня сложности начисляются разное кол-во очков
+    this.pointsBestResult = localStorage.getItem('theBest') || 0; // Значение лучшего результата
+    this.sampleOfBestResult; // Лучший результат на начало игры
+
+    this.threeGameStages = ['Game settings', 'Game process', 'End of the game']; // Три стадии игры, используется для разметки
 
     this._init();
   }
@@ -47,7 +53,8 @@
       this._handleClickOnStartGame.bind(this)
     );
 
-    this.buttonForRestart.addEventListener(
+    // Клик game over
+    this.gameOverButton.addEventListener(
       'click',
       this._hundleClickOnRestart.bind(this)
     );
@@ -83,6 +90,7 @@
     this._getDeltaIdForMoving();
   }
 
+  // Математич. выражение направления движения змеи
   _getDeltaIdForMoving() {
     if (this.moveDirection == 'right') this.moveDeltaId = 1;
     else if (this.moveDirection == 'left') this.moveDeltaId = -1;
@@ -91,45 +99,49 @@
     return this.moveDeltaId;
   }
 
+  // Выбор уровня сложности
   _handleDifficultyLevel(e) {
+    // Удаление разметки
     this.difficultyLevel.forEach((item) => {
       item.classList.remove('choosenLevelButton');
     });
+
     let level = e.target.getAttribute('id');
     if (level == 'veryEasy') {
       this.speed = 500;
-      this.addPoints = 1;
+      this.addPointsValue = 1;
     } else if (level == 'easy') {
       this.speed = 400;
-      this.addPoints = 2;
+      this.addPointsValue = 2;
     } else if (level == 'medium') {
       this.speed = 200;
-      this.addPoints = 3;
+      this.addPointsValue = 3;
     } else if (level == 'hard') {
       this.speed = 100;
-      this.addPoints = 4;
+      this.addPointsValue = 4;
     } else if (level == 'veryHard') {
       this.speed = 50;
-      this.addPoints = 5;
-    } else if (!level) return;
+      this.addPointsValue = 5;
+    } else if (!level) {
+      return;
+    }
+
+    // Разметка при выборе уровня сложности
     let choosenLevel = document.querySelector(`#${level}`);
     choosenLevel.classList.add('choosenLevelButton');
     this.playGameButton.classList.remove('invisible');
   }
 
   _handleClickOnStartGame() {
-    this.gameMessage.classList.add('invisible');
-    this.field.classList.add('invisible');
-    this.curResult.classList.remove('invisible');
+    this._setMarkUpOfTheGame(this.threeGameStages[1]); // Разметка
+    this._startGame();
     this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
-    this.bestResult.innerHTML = localStorage.getItem('theBest') || '0';
+    this.bestResultValue.innerHTML = localStorage.getItem('theBest') || '0';
     this.currentResultValue.innerHTML = '0';
   }
 
   _hundleClickOnRestart() {
-    this.buttonForRestart.remove();
-    this.finalResultMessage.remove();
-    this.gameMessage.classList.remove('invisible');
+    this._setMarkUpOfTheGame(this.threeGameStages[0]); // Разметка
   }
 
   // Создание разметки игры***************************
@@ -172,12 +184,12 @@
       currentSnakeData.splice(0, 1);
     } else {
       this.foodOnGameArea = false;
-      this.points = this.points + this.addPoints;
+      this.points = this.points + this.addPointsValue;
       this.currentResultValue.innerHTML = `${this.points}`;
     }
 
-    if (this.points > this.theMostPoints) {
-      this.bestResult.innerHTML = this.points;
+    if (this.points > this.pointsBestResult) {
+      this.bestResultValue.innerHTML = this.points;
     }
 
     // Редактирование при движении конца массива (голова змеи)
@@ -195,17 +207,14 @@
       sampleForChecking.includes(newHeadId)
     ) {
       clearInterval(this.updating);
-      document.removeEventListener(
-        'keydown',
-        this._hundleClickOnPress.bind(this)
-      );
+      currentSnakeData.splice(currentSnakeData.length - 1, 1);
+      currentSnakeData.splice(0, 0, tailId);
+
       this.gameOver = true;
 
       this._setBestResult(this.points);
       this._getResultMessage();
-
-      currentSnakeData.splice(currentSnakeData.length - 1, 1);
-      currentSnakeData.splice(0, 0, tailId);
+      return;
     }
     return currentSnakeData;
   }
@@ -233,7 +242,13 @@
 
     this._removeMarkUpOfSnake(currentSnakeData);
     this._getMovingSnake(currentSnakeData, this.moveDeltaId);
-    this._addMarkUpOfSnake(currentSnakeData);
+    if (!this.gameOver) {
+      this._addMarkUpOfSnake(currentSnakeData);
+    } else {
+      document.getElementById(this.foodId).style.background = 'transparent';
+      document.getElementById(this.foodId).style.boxShadow = 'none';
+      return;
+    }
   };
 
   _getRandomInteger(min, max) {
@@ -259,31 +274,58 @@
     }
   }
 
-  _setBestResult(curResult) {
-    if (this.theMostPoints < curResult) {
-      this.theMostPoints = localStorage.setItem('theBest', curResult);
+  _setBestResult(currentResult) {
+    if (this.pointsBestResult < currentResult) {
+      this.pointsBestResult = localStorage.setItem('theBest', currentResult);
     } else {
-      this.bestResult.innerHTML = this.theMostPoints;
+      this.bestResultValue.innerHTML = this.pointsBestResult;
     }
   }
 
-  playingGame() {
-    this.bestResult.innerHTML = this.theMostPoints;
-    this.sampleOfBestResult = this.theMostPoints;
+  setBestResult() {
+    this.bestResultValue.innerHTML = this.pointsBestResult;
+  }
+
+  _startGame() {
+    this.snakeData = [35, 36, 37];
+    this.moveDirection = 'right';
+    this.moveDeltaId = 1;
+    this.foodId = undefined;
+    this.foodOnGameArea = false;
+    this.gameOver = false;
+    this.points = 0;
+    this.bestResultValue.innerHTML = this.pointsBestResult;
+    this.sampleOfBestResult = this.pointsBestResult;
   }
 
   _getResultMessage() {
-    this.field.classList.add('invisible');
-    this.bestResultBlock.classList.add('invisible');
-    this.finalResultMessage.classList.remove('invisible');
+    this._setMarkUpOfTheGame(this.threeGameStages[2]); // Разметка
     if (this.sampleOfBestResult > this.points) {
       this.finalText.textContent = `Game over. Your result is ${this.points}. Try one more time to get best result!`;
     } else {
       this.finalText.textContent = `Game over. Congratulations! It's new record! Your result is ${this.points}.`;
     }
-    this.buttonForRestart.classList.add('startGame');
-    this.buttonForRestart.style.width = '30%';
-    this.buttonForRestart.style.fontSize = '1em';
-    this.buttonForRestart.style.marginTop = '20px';
+    this.gameOverButton.classList.add('startGame');
+    this.gameOverButton.style.width = '30%';
+    this.gameOverButton.style.fontSize = '1em';
+    this.gameOverButton.style.marginTop = '20px';
+  }
+
+  // Разметка игры в зависимости от стадии игры (начало, игра, конец)
+  _setMarkUpOfTheGame(gameStage) {
+    if (gameStage == 'Game settings') {
+      this.finalResultMessage.classList.add('invisible');
+      this.gameSettings.classList.remove('invisible');
+      this.infoBlock.classList.remove('invisible');
+      this.curResultBlock.classList.add('invisible');
+    } else if (gameStage == 'Game process') {
+      this.gameSettings.classList.add('invisible');
+      this.field.classList.remove('invisible');
+      this.curResultBlock.classList.remove('invisible');
+    } else if (gameStage == 'End of the game') {
+      this.field.classList.add('invisible');
+      this.infoBlock.classList.add('invisible');
+      this.finalResultMessage.classList.remove('invisible');
+    }
   }
 }
