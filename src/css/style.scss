@@ -1,53 +1,18 @@
-@import 'reset';
-
-$primary-color: #bf0707;
-$secondary-color: rgba(233, 213, 88, 1);
-$third-color:  #db8457;
-$fourth-color: rgba(233, 226, 172, 1);
-
-$transition-main: all 0.3s ease-in;
-
-%commonForBtn {
-	cursor: pointer;
-	text-align: center;
-	border-radius: 29px;
-	transition: $transition-main;
-	margin: 5px auto;
-}
-
-%flex-style {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-%mainFont-style {
-  color: $primary-color;
-  font-weight: 900;
-  text-transform: uppercase;
-  text-shadow: 3px 3px 0px $fourth-color;
-}
-
-%secondaryFont-style {
-  color: $third-color;
-  text-shadow: 3px 3px 0px $secondary-color;
-}
-
-%font-styleForPoints{
-  font-size: 1.5em;
-  @extend %secondaryFont-style;
-  padding-left: 10px;
-}
+@import 'helpers/reset';
+@import 'helpers/variables';
+@import 'helpers/placeholderSelector';
 
 body {
   background-image: url(../img/grass.jpg);
   font-family: 'Holtwood One SC', serif;
-}
-
-.container {
-  max-width: 680px;
-  margin: 20px auto;
-  position: relative;
+  .container {
+    max-width: 680px;
+    margin: 20px auto;
+    position: relative;
+  }
+  img {
+    width: 100%;
+  }
 }
 
 .gameField {
@@ -55,46 +20,37 @@ body {
   height: 400px;
   display: flex;
   flex-wrap: wrap;
-}
-
-.gameCell {
-  width: 40px;
-  height: 40px;
-  border-radius: 25%;
-}
-
-img {
-  width: 100%;
-}
-
-.borderCell {
-  background-image: url(../img/stonewall.jpg);
-  border-radius: 0;
-  background-size: cover;
-}
-
-.header, .currentInfo {
-  margin-bottom: 10px;
-  height: 80px;
-  @extend %flex-style;
-}
-
-.header__logo {
-  width: 30%;
-  img {
-    height: 80px;
-    width: 100px;
-    margin-left: 20px;
+  .gameCell {
+    width: 40px;
+    height: 40px;
+    border-radius: 25%;
+  }
+  .borderCell {
+    background-image: url(../img/stonewall.jpg);
+    border-radius: 0;
+    background-size: cover;
   }
 }
 
-h1 {
-  width: 70%;
-  font-size: 4em;
-  color: $primary-color;
-  font-weight: 900;
-  text-transform: uppercase;
-  text-shadow: 3px 3px 0px $fourth-color;
+.header {
+  @extend %styleForHeaderAndFooter;
+  @extend %flex-style;
+  .logo {
+    width: 30%;
+    img {
+      height: 80px;
+      width: 100px;
+      margin-left: 20px;
+    }
+  }
+  h1 {
+    width: 70%;
+    font-size: 4em;
+    color: $primary-color;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0px $fourth-color;
+  }
 }
 
 .invisible {
@@ -103,16 +59,19 @@ h1 {
 
 .currentInfo{
   @extend %mainFont-style;
+  @extend %styleForHeaderAndFooter;
+  @extend %flex-style;
   font-size: 1.3em;
+  width: 100%;
+  text-align: center;
   .currentResult{
-    width: 55%;
-    text-align: center;
+    width: 45%;
     #currentValue{
       @extend %font-styleForPoints;
     }
   }
   .bestResult{
-    text-align: center;
+    margin: 0 auto;
     width: 45%;
     #bestValue{
       @extend %font-styleForPoints;
@@ -129,21 +88,13 @@ h1 {
     text-align: center;
     padding: 40px 0 20px;
   }
-	// .startGame{
-  //   @extend %commonForBtn;
-	// 	font-size: 2em;
-	// 	padding: 10px 0;
-	// 	width: 40%;
-	// 	color: $third-color;
-	// 	background-color: $fourth-color;
-	// 	border: 2px solid $fourth-color;
-  //   box-shadow: 5px 5px 5px 0px $third-color;
-	// 	&:hover {
-	// 		color: $primary-color;
-	// 		transition: $transition-main;
-	// 		box-shadow: 5px 5px 5px 0px $primary-color;
-  //   }
-  // }
+	.startGame{
+    @extend %commonForBtn;
+    @extend %styleMainBtn;
+		&:hover {
+      @extend %hoverStyleForMainBtn;
+    }
+  }
   .choosenLevelButton{
     background-color: $primary-color;
     color: $secondary-color;
@@ -175,23 +126,18 @@ h1 {
   height: 200px;
   font-weight: bold;
   color: $secondary-color;
-  font-size: 2em;
+  font-size: 1.7em;
   text-align: center;
   text-shadow: 3px 3px 0px $primary-color;
 }
 
-.startGame{
+.gameOverBtn{
   @extend %commonForBtn;
-  font-size: 2em;
-  padding: 10px 0;
-  width: 40%;
-  color: $third-color;
-  background-color: $fourth-color;
-  border: 2px solid $fourth-color;
-  box-shadow: 5px 5px 5px 0px $third-color;
+  @extend %styleMainBtn;
+  width: 30%;
+  font-size: 1em;
+  margin-top: 20px;
   &:hover {
-    color: $primary-color;
-    transition: $transition-main;
-    box-shadow: 5px 5px 5px 0px $primary-color;
+    @extend %hoverStyleForMainBtn;
   }
 }

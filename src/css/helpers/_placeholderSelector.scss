@@ -1,0 +1,52 @@
+%commonForBtn {
+	cursor: pointer;
+	text-align: center;
+	border-radius: 29px;
+	transition: $transition-main;
+	margin: 5px auto;
+}
+
+%flex-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%mainFont-style {
+  color: $primary-color;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px $fourth-color;
+}
+
+%secondaryFont-style {
+  color: $third-color;
+  text-shadow: 3px 3px 0px $secondary-color;
+}
+
+%font-styleForPoints{
+  font-size: 1.5em;
+  @extend %secondaryFont-style;
+  padding-left: 10px;
+}
+
+%styleMainBtn{
+  font-size: 2em;
+  padding: 10px 0;
+  width: 40%;
+  color: $third-color;
+  background-color: $fourth-color;
+  border: 2px solid $fourth-color;
+  box-shadow: 5px 5px 5px 0px $third-color;
+}
+
+%hoverStyleForMainBtn{
+  color: $primary-color;
+  transition: $transition-main;
+  box-shadow: 5px 5px 5px 0px $primary-color;
+}
+
+%styleForHeaderAndFooter{
+  margin-bottom: 10px;
+  height: 80px;
+}

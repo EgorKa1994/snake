@@ -16,7 +16,7 @@
     this.finalResultMessage = document.querySelector('.gameOverResult'); // Поле с результатом игры
     this.finalText = document.querySelector('p'); // Сообщение
 
-    this.snakeData = []; // Данные змеи
+    this.snakeData = []; // Данные змеи, хвост - начало массива/ голова - конец массива
     this.borderData = []; // Данный границы игрового поля
 
     this.moveDirection = 'right'; // Направление движения змеи
@@ -36,6 +36,8 @@
 
     this._init();
   }
+
+  // События ----------------------------------
 
   _init() {
     // Клик на стрелки
@@ -101,11 +103,12 @@
 
   // Выбор уровня сложности
   _handleDifficultyLevel(e) {
-    // Удаление разметки
+    // Удаление разметки выбранной кнопки уровня сложности
     this.difficultyLevel.forEach((item) => {
       item.classList.remove('choosenLevelButton');
     });
 
+    // Выбор уровня сложности
     let level = e.target.getAttribute('id');
     if (level == 'veryEasy') {
       this.speed = 500;
@@ -134,17 +137,19 @@
 
   _handleClickOnStartGame() {
     this._setMarkUpOfTheGame(this.threeGameStages[1]); // Разметка
-    this._startGame();
+    this._startGame(); // Обнуление параметров игры
     this.updating = setInterval(this._movingMarkUp, this.speed, this.snakeData);
-    this.bestResultValue.innerHTML = localStorage.getItem('theBest') || '0';
-    this.currentResultValue.innerHTML = '0';
+    this.currentResultValue.innerHTML = this.points;
   }
 
   _hundleClickOnRestart() {
-    this._setMarkUpOfTheGame(this.threeGameStages[0]); // Разметка
+    this._setMarkUpOfTheGame(this.threeGameStages[0]); //
+    this.bestResultValue.innerHTML = localStorage.getItem('theBest') || '0';
   }
 
-  // Создание разметки игры***************************
+  // Конец событий--------------------------------------------------------------------
+
+  // Создание разметки игрового поля--------------------------------------------------
 
   getGameField() {
     for (let i = 0; i < 170; i++) {
@@ -174,22 +179,18 @@
     }
   }
 
+  // Конец разметки игрового поля -----------------------------------------------------------
+
   _getMovingSnake(currentSnakeData, directionOfMoving) {
-    let currentHeadId = currentSnakeData[currentSnakeData.length - 1];
-    // let samplePrimarySnakeData = currentSnakeData.slice();
-    let tailId = currentSnakeData[0];
+    let currentHeadId = currentSnakeData[currentSnakeData.length - 1]; // id головы
+    let tailId = currentSnakeData[0]; // id хвоста
 
     // Редактирование при движении начала массива (хвост змеи) в зависимости от поедания пищи
     if (currentHeadId !== +this.foodId) {
       currentSnakeData.splice(0, 1);
     } else {
       this.foodOnGameArea = false;
-      this.points = this.points + this.addPointsValue;
-      this.currentResultValue.innerHTML = `${this.points}`;
-    }
-
-    if (this.points > this.pointsBestResult) {
-      this.bestResultValue.innerHTML = this.points;
+      this._pointsCounting(this.points); // Добавление очков при поедании
     }
 
     // Редактирование при движении конца массива (голова змеи)
@@ -197,11 +198,11 @@
 
     let newHeadId = currentSnakeData[currentSnakeData.length - 1];
 
-    // Копия текущего массива змеи без последнего элемента (головы змеи)
+    // Копия текущего массива змеи без последнего элемента ("новой" головы змеи)
     let sampleForChecking = currentSnakeData.slice();
     sampleForChecking.splice(sampleForChecking.length - 1, 1);
 
-    // Проверка, столкнулась ли змея с границами либо с туловищем
+    // Проверка на конец игры (столкнулась с туловищем или границей)
     if (
       this.borderData.includes(newHeadId) ||
       sampleForChecking.includes(newHeadId)
@@ -238,6 +239,7 @@
     if (this.foodOnGameArea == false) {
       this._createIdOfFood();
       this._markUpFood();
+      // this._pointsCounting(this.points);
     }
 
     this._removeMarkUpOfSnake(currentSnakeData);
@@ -276,7 +278,8 @@
 
   _setBestResult(currentResult) {
     if (this.pointsBestResult < currentResult) {
-      this.pointsBestResult = localStorage.setItem('theBest', currentResult);
+      localStorage.setItem('theBest', currentResult);
+      this.pointsBestResult = currentResult;
     } else {
       this.bestResultValue.innerHTML = this.pointsBestResult;
     }
@@ -300,15 +303,12 @@
 
   _getResultMessage() {
     this._setMarkUpOfTheGame(this.threeGameStages[2]); // Разметка
-    if (this.sampleOfBestResult > this.points) {
+
+    if (this.sampleOfBestResult >= this.points) {
       this.finalText.textContent = `Game over. Your result is ${this.points}. Try one more time to get best result!`;
     } else {
       this.finalText.textContent = `Game over. Congratulations! It's new record! Your result is ${this.points}.`;
     }
-    this.gameOverButton.classList.add('startGame');
-    this.gameOverButton.style.width = '30%';
-    this.gameOverButton.style.fontSize = '1em';
-    this.gameOverButton.style.marginTop = '20px';
   }
 
   // Разметка игры в зависимости от стадии игры (начало, игра, конец)
@@ -326,6 +326,15 @@
       this.field.classList.add('invisible');
       this.infoBlock.classList.add('invisible');
       this.finalResultMessage.classList.remove('invisible');
+    }
+  }
+
+  // Подсчет очков
+  _pointsCounting(currentPoints) {
+    this.points = currentPoints + this.addPointsValue;
+    this.currentResultValue.innerHTML = `${this.points}`;
+    if (this.points > this.pointsBestResult) {
+      this.bestResultValue.innerHTML = this.points;
     }
   }
 }
